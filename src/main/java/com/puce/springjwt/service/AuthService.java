@@ -13,44 +13,48 @@ import com.puce.springjwt.model.Role;
 import com.puce.springjwt.model.User;
 import com.puce.springjwt.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor; // Genera un constructor con los atributos finales
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Genera un constructor con los atributos finales
 public class AuthService {
 
-    // Varaiable para el repositorio de usuarios
-    private final UserRepository userRepository;
-    // Variable para el servicio de JWT
-    private final JwtService jwtService;
-    // Variable para encriptar la contraseña
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+        // Varaiable para el repositorio de usuarios
+        private final UserRepository userRepository;
+        // Variable para el servicio de JWT
+        private final JwtService jwtService;
+        // Variable para encriptar la contraseña
+        private final PasswordEncoder passwordEncoder;
+        // Variable para el administrador de autenticación
+        private final AuthenticationManager authenticationManager;
 
-    public AuthResponse login(LoginRequest request) {
-        authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
-        String token = jwtService.getToken(user);
-        return AuthResponse.builder()
-                .token(token)
-                .build();
-    }
+        // Método para iniciar sesión
+        public AuthResponse login(LoginRequest request) {
+                authenticationManager
+                                .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(),
+                                                request.getPassword()));
+                UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+                String token = jwtService.getToken(user);
+                return AuthResponse.builder()
+                                .token(token)
+                                .build();
+        }
 
-    public AuthResponse register(RegisterRequest request) {
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .role(Role.USER)
-                .build();
+        // Método para registrar un usuario
+        public AuthResponse register(RegisterRequest request) {
+                User user = User.builder()
+                                .username(request.getUsername())
+                                .password(passwordEncoder.encode(request.getPassword()))
+                                .firstName(request.getFirstName())
+                                .lastName(request.getLastName())
+                                .role(Role.USER)
+                                .build();
 
-        userRepository.save(user);
+                userRepository.save(user);
 
-        return AuthResponse.builder()
-                .token(jwtService.getToken(user))
-                .build();
-    }
+                return AuthResponse.builder()
+                                .token(jwtService.getToken(user))
+                                .build();
+        }
 
 }

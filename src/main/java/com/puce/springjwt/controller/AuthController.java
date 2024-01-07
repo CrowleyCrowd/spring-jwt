@@ -19,13 +19,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class AuthController {
 
+    // Inyectamos el servicio
     private final AuthService authService;
 
+    // Método para iniciar sesión
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
+    // Método para registrar un usuario
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));

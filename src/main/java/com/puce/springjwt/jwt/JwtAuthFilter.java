@@ -24,21 +24,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    // Variable para el servicio de JWT
     private final JwtService jwtService;
+    // Variable para el servicio de detalles de usuario
     private final UserDetailsService userDetailsService;
 
+    // Método para filtrar las peticiones
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        // Obtenemos el token de la petición
         final String token = getTokenFromRequest(request);
         final String username;
 
+        // Si el token es nulo, se continua con la petición
         if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        // Obtenemos el username del token
         username = jwtService.getUsernameFromToken(token);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -49,6 +55,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+                // Se agrega el usuario autenticado al contexto de seguridad
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
@@ -57,6 +64,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    // Método para obtener el token de la petición
     private String getTokenFromRequest(HttpServletRequest request) {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
