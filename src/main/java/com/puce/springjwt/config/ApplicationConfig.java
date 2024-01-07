@@ -15,34 +15,34 @@ import com.puce.springjwt.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
-@RequiredArgsConstructor
+@Configuration // Indica que la clase es una clase de configuración
+@RequiredArgsConstructor // Genera un constructor con los atributos marcados como final
 public class ApplicationConfig {
 
-    private final UserRepository userRepository;
+    private final UserRepository userRepository; // Repositorio de usuarios
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+    @Bean // Indica que el método es un bean de Spring
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception { // Configura el administrador de autenticación
+        return config.getAuthenticationManager(); // Devuelve el administrador de autenticación
     }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
+    @Bean // Indica que el método es un bean de Spring
+    public AuthenticationProvider authenticationProvider() { // Configura el proveedor de autenticación
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailService()); // Intanciar el servicio de usuario
         authenticationProvider.setPasswordEncoder(passwordEncoder()); // Instanciar el encriptador de contraseña
-        return authenticationProvider;
+        return authenticationProvider; // Devuelve el proveedor de autenticación
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    @Bean // Indica que el método es un bean de Spring
+    public PasswordEncoder passwordEncoder() { // Instancia el encriptador de contraseña
+        return new BCryptPasswordEncoder(); // Devuelve el encriptador de contraseña
     }
 
-    @Bean
-    public UserDetailsService userDetailService() {
-        return username -> userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("El usuario no existe"));
+    @Bean // Indica que el método es un bean de Spring
+    public UserDetailsService userDetailService() { // Instancia el servicio de usuario
+        return username -> userRepository.findByUsername(username) // Busca el usuario por nombre de usuario
+                .orElseThrow(() -> new UsernameNotFoundException("El usuario no existe")); // Lanza una excepción si no existe
     }
 
 }

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // Genera un constructor con todos los atributos de la clase
 @NoArgsConstructor // Genera un constructor vacío
 @Entity
-@Table(name = "product", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }) })
+@Table(name = "product", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }) }) // Evita que se repitan los nombres de los productos
 public class Product {
     @Id
     @GeneratedValue

@@ -3,9 +3,9 @@ package com.puce.springjwt.model;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority; // Interfaz que representa una autoridad (rol) concedida a un usuario
+import org.springframework.security.core.authority.SimpleGrantedAuthority; // Implementación básica de GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails; // Interfaz que representa un usuario autenticado
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -21,18 +21,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//La anotaciones permiten generar los getters y setters de los atributos de la clase
 @Data // Genera los getters y setters
 @Builder // Permite crear objetos de la clase sin necesidad de usar el constructor
 @AllArgsConstructor // Genera un constructor con todos los atributos de la clase
 @NoArgsConstructor // Genera un constructor vacío
 @Entity
-@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) })
+@Table(name = "user", uniqueConstraints = { @UniqueConstraint(columnNames = { "username" }) }) // Evita que se repitan los nombres de los usuarios
 public class User implements UserDetails {
     @Id
-    @GeneratedValue
+    @GeneratedValue // Genera un valor automáticamente
     Integer id;
-    @Basic
+    @Basic // Permite que el atributo no sea nulo
     @Column(nullable = false)
     String username;
     @Column(nullable = false)
@@ -44,6 +43,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
 
+    // Métodos de la interfaz UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority((role.name())));

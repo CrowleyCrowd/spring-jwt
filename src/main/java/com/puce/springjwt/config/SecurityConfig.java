@@ -13,26 +13,25 @@ import com.puce.springjwt.jwt.JwtAuthFilter;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
+@Configuration // Indica que la clase es una clase de configuración
+@EnableWebSecurity // Habilita la seguridad web
+@RequiredArgsConstructor // Genera un constructor con los atributos marcados como final
 public class SecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
-    private final AuthenticationProvider authProvider;
+    private final JwtAuthFilter jwtAuthFilter; // Filtro de autenticación
+    private final AuthenticationProvider authProvider; // Proveedor de autenticación
 
-    @Bean
+    @Bean // Indica que el método es un bean de Spring
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable()) // Desahabilita la autenticación por csrf value
-                .authorizeHttpRequests(authRequest -> authRequest
+                .authorizeHttpRequests(authRequest -> authRequest // Configura las rutas que requieren autenticación
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated())
-                .sessionManagement(sessionManager -> sessionManager
+                .sessionManagement(sessionManager -> sessionManager // Deshabilita la creación de sesiones
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .authenticationProvider(authProvider) // Configura el proveedor de autenticación
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class) // Agrega el filtro de autenticación
+                .build(); // Construye la configuración
     }
-
 }

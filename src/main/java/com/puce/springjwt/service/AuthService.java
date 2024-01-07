@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor; // Genera un constructor con los atributo
 @RequiredArgsConstructor // Genera un constructor con los atributos finales
 public class AuthService {
 
-        // Varaiable para el repositorio de usuarios
+        // Variable para el repositorio de usuarios
         private final UserRepository userRepository;
         // Variable para el servicio de JWT
         private final JwtService jwtService;
